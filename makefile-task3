@@ -1,0 +1,37 @@
+OBJS = ./o/task3-33094993.o ./o/cpu_controller.o ./o/cpu.o ./o/handle_processes.o ./o/linked_list.o ./o/node.o ./o/queue.o ./o/priority_queue.o ./o/int_functions.o ./o/str_functions.o
+CC = gcc
+CFLAGS = -Wall -c -g
+LFLAGS = -Wall
+
+DB: $(OBJS)
+	$(CC) $(LFLAGS) $(OBJS) -o DB
+
+./o/task3-33094993.o: ./c/task3-33094993.c ./h/task3-33094993.h ./h/scheduler.h ./h/pcb.h
+	$(CC) $(CFLAGS) ./c/task3-33094993.c -o ./o/task3-33094993.o
+
+./o/cpu_controller.o: ./c/cpu_controller.c ./h/cpu_controller.h
+	$(CC) $(CFLAGS) ./c/cpu_controller.c -o ./o/cpu_controller.o
+
+./o/cpu.o: ./c/cpu.c ./h/cpu.h
+	$(CC) $(CFLAGS) ./c/cpu.c -o ./o/cpu.o
+
+./o/handle_processes.o: ./c/handle_processes.c ./h/handle_processes.h
+	$(CC) $(CFLAGS) ./c/handle_processes.c -o ./o/handle_processes.o
+
+./o/linked_list.o: ./c/linked_list.c ./h/linked_list.h
+	$(CC) $(CFLAGS) ./c/linked_list.c -o ./o/linked_list.o
+
+./o/node.o: ./c/node.c ./h/node.h
+	$(CC) $(CFLAGS) ./c/node.c -o ./o/node.o
+
+./o/queue.o: ./c/queue.c ./h/queue.h
+	$(CC) $(CFLAGS) ./c/queue.c -o ./o/queue.o
+
+./o/priority_queue.o: ./c/priority_queue.c ./h/priority_queue.h
+	$(CC) $(CFLAGS) ./c/priority_queue.c -o ./o/priority_queue.o
+
+./o/int_functions.o: ./c/int_functions.c ./h/int_functions.h
+	$(CC) $(CFLAGS) ./c/int_functions.c -o ./o/int_functions.o
+
+./o/str_functions.o: ./c/str_functions.c ./h/str_functions.h
+	$(CC) $(CFLAGS) ./c/str_functions.c -o ./o/str_functions.o

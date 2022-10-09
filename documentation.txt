@@ -1,0 +1,225 @@
+---------------------------------------------- TASK 1 ----------------------------------------------
+NAME
+
+    FCFS
+
+HOW TO RUN
+
+    Run the command:
+        ./FCFS [PROCESS_DATA_FILE]
+    Note: PROCESS_DATA_FILE is optional
+
+DESCRIPTION
+
+    FCFS will run all the processes in the PROCESS_DATA_FILE using a first-come-first-serve 
+    scheduling algorithm. This algorithm is non-preemptive.
+
+    ARGUMENTS
+
+        PROCESS_DATA_FILE
+            Allows the user to input a path for the process data file which process data is
+            retrieved.
+            PROCESS_DATA_FILE must appear immediately after the command (e.g., ./FCFS process_data.txt).
+            Optional argument - Default file: "processes.txt".
+            File data format:
+                [Process Name] [Arrival Time] [Service Time] [Deadline]
+    
+HOW TO COMPILE THE PROGRAM
+
+1.  Navigate the folder with all the program files
+2.  Run the command:
+        make -f makefile-task1
+3.  Program has been compiled
+
+OUTPUT
+
+1.  Real-time simulation events to standard output
+2.  Post-simulation results to the file: "results-1.txt"
+
+USAGE EXAMPLE:
+    
+    ./FCFS
+
+    ./FCFS test.txt
+
+ASSUMPTIONS ABOUT ALGORITHM
+
+-   A queue is used to implement the order in which the processes are run.
+-   The scheduling algorithm is asked every second to provide the next process to run.
+-   The process queue used by the scheduler consists of PIDs of the processes.
+-   A process will run to completion even if the deadline is not met.
+-   Swapping processes happens instantly.
+-   None of the other code, including the scheduler, takes any time to execute. 
+-   The work of each process is just to sleep for all the allocated CPU time.
+-   Process data file is formatted correctly
+-   The process name is no more than 10 characters
+
+---------------------------------------------- TASK 2 ----------------------------------------------
+NAME
+
+    RR
+
+HOW TO RUN
+
+    Run the command:
+        ./RR [PROCESS_DATA_FILE]
+    Note: PROCESS_DATA_FILE is optional
+
+DESCRIPTION
+
+    RR will run all the processes in the PROCESS_DATA_FILE using a round-robin scheduling algorithm.
+    This algorithm is preemptive.
+
+    ARGUMENTS
+
+        PROCESS_DATA_FILE
+            Allows the user to input a path for the process data file which process data is
+            retrieved.
+            PROCESS_DATA_FILE must appear immediately after the command (e.g., ./FCFS process_data.txt).
+            Optional argument - Default file: "processes.txt".
+            File data format:
+                [Process Name] [Arrival Time] [Service Time] [Deadline]
+    
+HOW TO COMPILE THE PROGRAM
+
+1.  Navigate the folder with all the program files
+2.  Run the command:
+        make -f makefile-task2
+3.  Program has been compiled
+
+OUTPUT
+
+1.  Real-time simulation events to standard output
+2.  Post-simulation results to the file: "results-2.txt"
+
+USAGE EXAMPLE:
+    
+    ./RR
+
+    ./RR test.txt
+
+ASSUMPTIONS ABOUT ALGORITHM
+
+-   A priority queue is used to implement the order in which the processes are run.
+-   Newly arrive process would get higher priority in the ready queue if the running process is
+    preempted at the time the process arrives.
+-   The scheduling algorithm is asked every second to provide the next process to run.
+-   The process queue used by the scheduler consists of PIDs of the processes.
+-   Swapping processes happens instantly.
+-   None of the other code, including the scheduler, takes any time to execute. 
+-   The work of each process is just to sleep for all the allocated CPU time.
+-   Process data file is formatted correctly
+-   The process name is no more than 10 characters
+
+---------------------------------------------- TASK 3 ----------------------------------------------
+NAME
+
+    DB
+
+HOW TO RUN
+
+    Run the command:
+        ./DB [PROCESS_DATA_FILE]
+    Note: PROCESS_DATA_FILE is optional
+
+DESCRIPTION
+
+    DB will run all the processes in the PROCESS_DATA_FILE using a custom algorithm that maximises
+    the number of processes that meet their deadline.
+
+    ARGUMENTS
+
+        PROCESS_DATA_FILE
+            Allows the user to input a path for the process data file which process data is
+            retrieved.
+            PROCESS_DATA_FILE must appear immediately after the command (e.g., ./FCFS process_data.txt).
+            Optional argument - Default file: "processes.txt".
+            File data format:
+                [Process Name] [Arrival Time] [Service Time] [Deadline]
+    
+HOW TO COMPILE THE PROGRAM
+
+1.  Navigate the folder with all the program files
+2.  Run the command:
+        make -f makefile-task3
+3.  Program has been compiled
+
+OUTPUT
+
+1.  Real-time simulation events to standard output
+2.  Post-simulation results to the file: "results-3.txt"
+
+USAGE EXAMPLE:
+    
+    ./DB
+
+    ./DB test.txt
+
+HOW ALGORITHM WORKS
+
+    The algorithm uses a priority queue (deadline_pq) and a queue (end_q). It is also preemptive.
+    
+    When a process arrives, 
+    its cost is calculated. The cost function is:
+        cost = ((deadline + entry time) - current time)^(remaining time)
+    The formula is designed to favor processes in the following order (1 will have the lowest cost 
+    and 3 will have the highest cost):
+    1.  Low remaining time and low ((deadline + entry time) - current time) value
+    2.  Low remaining time and high ((deadline + entry time) - current time) value
+    3.  High remaining time and high ((deadline + entry time) - current time) value
+    Then the PID of the process is appended to deadline_pq with the priority = -cost. This is done 
+    so the processes with lower cost are a given priority.
+    
+    When it comes time to schedule a process, the algorithm first updates all the costs of the 
+    processes in the deadline_pq. Then it appends the previously run process (if any) back into the 
+    deadline_pq using its cost (which is calculated again) as the priority. Afterward it move all 
+    processes in deadline_pq whose (deadline + entry time) < current time or there 
+    cost > (remaining time)^(remaining time). If cost > (remaining time)^(remaining time), then 
+    (deadline + entry time) - current time < remaining time. Hence all the processes whose deadline 
+    can't be met anymore are moved to end_q. Then next process in deadline_pq is served and run. 
+    Once deadline_pq is empty, all the process end_q are run one by one until they finish executing. 
+
+WHY THE ALGORITHM WORKS
+    
+    The algorithm works because it takes into account the amount of time left until the deadline of 
+    a process is reached as well as the remaining time required to finish executing the process. It
+    does so in a manner where it favors processes that only required a short amount of time to run,
+    but have their deadline very close compared other processes. This maximises the number of short 
+    processes whose deadlines are meant. Then it prioritises processes that also have a short 
+    remaining time, but a deadline further away. These processes have a low priority because it is
+    more urgent to run processes with closer deadlines. The processes that are given the least 
+    priority are processes with high remaining times. These processes have a lower chance of meeting
+    their deadline and tend to hog CPU time. Further, since the algorithm is preemptive, it can 
+    stop processes currently running in favor of processes that need to run more urgently.
+
+EXAMPLE WHERE ALGORITHM WORK
+
+    PROCESS DATA
+
+        P1 0 3 1
+        P2 2 8 0
+        P3 5 9 0
+        P4 7 9 0
+
+    POST SIMULATION RESULTS
+
+        P1 0 3 1
+        P4 0 2 1
+        P3 2 6 1
+        P2 8 14 0
+
+    As we can see, 3 of the 4 processes' deadlines are met, which is indeed the maximum number of 
+    deadlines we can meet for the process data inputted.
+
+ASSUMPTIONS ABOUT ALGORITHM
+
+-   Both a queue and priority can be used to implement the order in which the processes are run.
+-   The scheduling algorithm is asked every second to provide the next process to run.
+-   The process storage used by the scheduler consists of PIDs of the processes.
+-   The scheduler has access to the current time, which is the time passed since the CPU has 
+-   started.
+-   Swapping processes happens instantly.
+-   None of the other code, including the scheduler, takes any time to execute. 
+-   The work of each process is just to sleep for all the allocated CPU time.
+-   Process data file is formatted correctly
+-   The process name is no more than 10 characters

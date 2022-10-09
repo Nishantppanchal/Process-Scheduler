@@ -1,0 +1,6 @@
+.vscode
+
+*.o
+FCFS
+RR
+DB
