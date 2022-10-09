@@ -46,7 +46,7 @@ int str_to_int(char *str, int *i, char delimiter)
         // Gets the digit from the current character
         digit = atoi(&current_char);
         // Add the digit to the number
-        num += digit * power(10, j);
+        num = num * 10 + digit;
 
         /* Increment i and j */
         ++(*i), j++;
@@ -113,7 +113,7 @@ void concat(char *ouput, char **strings, int num_strings, char seperator)
 int append_to_str(char **str1, int str1_len, char *str2, int str2_len)
 {
     /* Declare and initialise variables */
-    int i = 0;                                  // Used to track position in strings when appending
+    int i = 0;                              // Used to track position in strings when appending
     int new_str1_len = str1_len + str2_len; // The new length of append string, with -1 to account for termination character in str2
 
     /* Increase the size of str1 */
