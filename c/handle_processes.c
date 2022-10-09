@@ -269,7 +269,8 @@ int *next_processes(Process_iterator *self)
 Process_str generate_process_str(Process_iterator *self, pcb_t *process)
 {
     /* Process name */
-    int name_len = string_len(process->process_name); // Get the length of the process name and save it to the name_len variable
+    // Get the length of the process name and save it to the name_len variable
+    int name_len = string_len(process->process_name) + 1; // +1 for termination character
 
     /* Turnaround time */
     // Calculate the turnaround time and save it to the turnaround_time variable
@@ -299,21 +300,21 @@ Process_str generate_process_str(Process_iterator *self, pcb_t *process)
 
     /* Total length */
     /* Add 4 for the spaces, the newline character and terminating null character
-     * -1 on each length since the null terminator is already included at the end when we +5
+     * -1 on each length since the null terminator doesn't need to be included in th length
      */
-    int total_len = (name_len - 1) + (turnaround_time_len - 1) + (wait_time_len - 1) + (deadline_met_len - 1) + 5;
+    int total_len = (name_len - 1) + (turnaround_time_len - 1) + (wait_time_len - 1) + (deadline_met_len - 1) + 4;
 
     /* Create the string */
     // Allocate memory for the string
-    char *result_str = (char *)malloc(sizeof(char) * total_len);
+    char *result_str = (char *)malloc(sizeof(char) * (total_len + 1)); // +1 to account for termination character
     // Creates an array of pointers to the strings
     char *strings[] = {process->process_name, wait_time_str, turnaround_time_str, deadline_met_str};
     // Concatenates the strings together with spaces in between
     concat(result_str, strings, 4, ' ');
     // Add a newline character to the second last character of the string
-    result_str[total_len - 2] = '\n';
+    result_str[total_len - 1] = '\n';
     // Add a terminating null character to the end of the string
-    result_str[total_len - 1] = '\0';
+    result_str[total_len] = '\0';
 
     /* Create the Process_str struct that is returned */
     Process_str process_str;      // Initialize the Process_str struct

@@ -20,8 +20,9 @@ CPU_controller *initialise_CPU_controller(char *filename, Scheduler *scheduler)
     CPU_controller *cpu_controller = (CPU_controller *)malloc(sizeof(CPU_controller));
 
     /* Output data */
-    cpu_controller->result_str = (char *)malloc(0); // Allocates memory of 0 size for a empty string
-    cpu_controller->results_len = 0;                // Sets the initial length of the result_str to 0
+    cpu_controller->result_str = (char *)malloc(sizeof(char)); // Allocates memory for a string with just the termination character
+    cpu_controller->result_str[0] = '\0';                      // Add termination character to result_str
+    cpu_controller->results_len = 0;                           // Sets the initial length of the result_str to 0
 
     /* Components that have to be managed */
     cpu_controller->cpu = create_CPU();                     // Creates the CPU and sets cpu to a pointer to the cpu
@@ -140,7 +141,7 @@ void shutdown_CPU(CPU_controller *self, char task_num)
     // Move the file pointer to the start of the file
     lseek(results_file, 0, SEEK_SET);
     // Write the output to the file
-    write(results_file, self->result_str, self->results_len);
+    write(results_file, self->result_str, self->results_len - 1); // -1 to remove last \n
 
     /* Closes the file */
     close(results_file);
