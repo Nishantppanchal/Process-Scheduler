@@ -141,7 +141,7 @@ void shutdown_CPU(CPU_controller *self, char task_num)
     // Move the file pointer to the start of the file
     lseek(results_file, 0, SEEK_SET);
     // Write the output to the file
-    write(results_file, self->result_str, self->results_len - 1); // -1 to remove last \n
+    write(results_file, self->result_str, self->results_len);
 
     /* Closes the file */
     close(results_file);
