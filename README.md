@@ -1,2 +1,2 @@
 # Process-Scheduler
-FIT2100 Assignment 2
+Simulates a process scheduler in C
